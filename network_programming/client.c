@@ -38,10 +38,12 @@ int main(int argc, char const* argv[])
 		return -1;
 	}
 
+	printf("IMPORTANT: due to limitations, you can only type 1000 characters in one line\n");
 	while (1) {
 		char msg[1000];
-		scanf("%s", msg);
+		fgets(msg, sizeof(msg), stdin);
 		char* p_msg = msg;
+		printf("%s\n", msg);
 
 		send(client_fd, p_msg, strlen(p_msg), 0);
 		valread = read(client_fd, buffer, 1024);

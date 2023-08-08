@@ -40,11 +40,12 @@ int main(int argc, char const* argv[]) {
         perror("accept");
         exit(EXIT_FAILURE);
     }
-
-    while (1) {
+	printf("IMPORTANT: due to limitations, you can only type 1000 characters in one line\n");
+	while (1) {
 		char msg[1000];
-		scanf("%s", msg);
+		fgets(msg, sizeof(msg), stdin);
 		char* p_msg = msg;
+        printf("%s\n", msg);
 
         valread = read(new_socket, buffer, 1024);
         printf("%s\n", buffer);
