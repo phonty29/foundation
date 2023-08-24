@@ -1,83 +1,190 @@
+import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class Percolation {
-    // N size of grid, all squares are closed
-    private int size;
-    private boolean[] grid;
-    private WeightedQuickUnionUF unionFind;
-    private WeightedQuickUnionUF weightedUnionFind;
 
-    public Percolation(int N) {
-        if (N <= 0)
-            throw new IllegalArgumentException("Argument should be a positive number.");
-        size = N;
-        grid = new boolean[N * N + 2];
-        unionFind = new WeightedQuickUnionUF(N * N + 2);
-        weightedUnionFind = new WeightedQuickUnionUF(N * N + 1);
-        grid[0] = true;
-        for (int i = 1; i < N * N + 2; i++) {
-            grid[i] = false;
+    // Length of the square grid "gridLength * gridLength"
+    private int gridLength;
+
+    // Array representing indexes of all sites (either it"s open or blocked)
+    private boolean[] sites;
+
+    // Number of open sites
+    private int openSitesNumber;
+
+    // Index of the top virtual site (has value 0)
+    private int virtualTopIndex;
+
+    // Index of the top virtual site (has value (gridLength * gridLength) + 1)
+    private int virtualBottomIndex;
+
+    // Weighted quick union-find data structure
+    // to calculate percolation
+    private WeightedQuickUnionUF ufForPercolation;
+
+    // Weighted quick union-find data structure
+    // to calculate fullness (without bottom virtual site)
+    private WeightedQuickUnionUF ufForFullness;
+
+    // Create n-by-n grid, with all sites blocked
+    public Percolation(int n) {
+        if (n < 1) {
+            throw new IllegalArgumentException("Grid must have at least one row and column");
+        }
+
+        gridLength = n;
+        int gridSize = (n * n) + 2; // with two virtual sites
+        sites = new boolean[gridSize];
+        openSitesNumber = 0;
+
+        // init and open virtual sites
+        virtualTopIndex = 0;
+        virtualBottomIndex = (gridLength * gridLength) + 1;
+        sites[virtualTopIndex] = true;
+        sites[virtualBottomIndex] = false;
+
+        ufForPercolation = new WeightedQuickUnionUF(gridSize);
+        ufForFullness = new WeightedQuickUnionUF(gridSize);
+
+        // connect top and bottom rows to virtual sites
+        for (int col = 1; col <= gridLength; col++) {
+            int rowTop = 1;
+            int siteTopIndex = getIndexByRowAndColumn(rowTop, col);
+            ufForPercolation.union(virtualTopIndex, siteTopIndex);
+            ufForFullness.union(virtualTopIndex, siteTopIndex);
+
+            int rowBottom = gridLength;
+            int siteBottomIndex = getIndexByRowAndColumn(rowBottom, col);
+            ufForPercolation.union(virtualBottomIndex, siteBottomIndex);
         }
     }
 
-    public void open(int i, int j) {
-        if (i <= 0 || i > size)
-            throw new IndexOutOfBoundsException("row index i out of bounds");
-        if (j <= 0 || j > size)
-            throw new IndexOutOfBoundsException("col index i out of bounds");
+    // Open site (row, col) if it is not open already
+    public void open(int row, int col)
+    {
+        int siteIndex = getIndexByRowAndColumn(row, col);
+        if (sites[siteIndex]) {
+            return;
+        }
 
-        grid[this.serializedIndex(i, j)] = true;
+        openSitesNumber++;
+        sites[siteIndex] = true;
 
-        if (i < size && this.isOpen(i + 1, j)) {
-            unionFind.union(this.serializedIndex(i, j), this.serializedIndex(i + 1, j));
-            weightedUnionFind.union(this.serializedIndex(i, j), this.serializedIndex(i + 1, j));
+        // connect with left neighbor
+        if (col > 1 && isOpen(row, col - 1)) {
+            int siteLeftIndex = getIndexByRowAndColumn(row, col - 1);
+            ufForPercolation.union(siteIndex, siteLeftIndex);
+            ufForFullness.union(siteIndex, siteLeftIndex);
+        }
 
+        // connect with right neighbor
+        if (col < gridLength && isOpen(row, col + 1)) {
+            int siteLeftIndex = getIndexByRowAndColumn(row, col + 1);
+            ufForPercolation.union(siteIndex, siteLeftIndex);
+            ufForFullness.union(siteIndex, siteLeftIndex);
         }
-        // Central
-        if (i > 1 && this.isOpen(i - 1, j)) {
-            unionFind.union(this.serializedIndex(i, j), this.serializedIndex(i - 1, j));
-            weightedUnionFind.union(this.serializedIndex(i, j), this.serializedIndex(i - 1, j));
+
+        // connect with top neighbor
+        if (row > 1 && isOpen(row - 1, col)) {
+            int siteLeftIndex = getIndexByRowAndColumn(row - 1, col);
+            ufForPercolation.union(siteIndex, siteLeftIndex);
+            ufForFullness.union(siteIndex, siteLeftIndex);
         }
-        if (j < size && this.isOpen(i, j + 1)) {
-            unionFind.union(this.serializedIndex(i, j), this.serializedIndex(i, j + 1));
-            weightedUnionFind.union(this.serializedIndex(i, j), this.serializedIndex(i, j + 1));
-        }
-        if (j > 1 && this.isOpen(i, j - 1)) {
-            unionFind.union(this.serializedIndex(i, j), this.serializedIndex(i, j - 1));
-            weightedUnionFind.union(this.serializedIndex(i, j), this.serializedIndex(i, j - 1));
-        }
-        // Edge
-        if (i == 1) {
-            unionFind.union(this.serializedIndex(i, j), 0);
-            weightedUnionFind.union(this.serializedIndex(i, j), 0);
-        }
-        if (i == size) {
-            unionFind.union(this.serializedIndex(i, j), size * size + 1);
+
+        // connect with bottom neighbor
+        if (row < gridLength && isOpen(row + 1, col)) {
+            int siteLeftIndex = getIndexByRowAndColumn(row + 1, col);
+            ufForPercolation.union(siteIndex, siteLeftIndex);
+            ufForFullness.union(siteIndex, siteLeftIndex);
         }
     }
 
-    private int serializedIndex(int i, int j) {
-        return (i - 1) * size + j;
+    // If site (row, col) open
+    public boolean isOpen(int row, int col)
+    {
+        int siteIndex = getIndexByRowAndColumn(row, col);
+
+        return sites[siteIndex];
     }
 
-    public boolean isOpen(int i, int j) {
-        if (i <= 0 || i > size)
-            throw new IndexOutOfBoundsException("row index i out of bounds");
-        if (j <= 0 || j > size)
-            throw new IndexOutOfBoundsException("col index i out of bounds");
-        return grid[this.serializedIndex(i, j)];
+    // If site (row, col) full
+    public boolean isFull(int row, int col)
+    {
+        int siteIndex = getIndexByRowAndColumn(row, col);
+
+        return (isOpen(row, col) && ufForFullness.connected(virtualTopIndex, siteIndex));
     }
 
-    public boolean isFull(int i, int j) {
-        if (i <= 0 || i > size)
-            throw new IndexOutOfBoundsException("row index i out of bounds");
-        if (j <= 0 || j > size)
-            throw new IndexOutOfBoundsException("col index i out of bounds");
-        return weightedUnionFind.connected(this.serializedIndex(i, j), 0);
+    // Number of open sites
+    public int numberOfOpenSites()
+    {
+        return openSitesNumber;
     }
 
-    public boolean percolates() {
-        return unionFind.connected(0, size * size + 1);
+    // If the system percolate
+    public boolean percolates()
+    {
+        // if grid with one site - check if it"s open
+        if (gridLength == 1) {
+            int siteIndex = getIndexByRowAndColumn(1, 1);
+            return sites[siteIndex];
+        }
+
+        return ufForPercolation.connected(virtualTopIndex, virtualBottomIndex);
     }
 
+    // Get site"s index to be represented in array
+    private int getIndexByRowAndColumn(int row, int col)
+    {
+        validateBounds(row, col);
+
+        return ((row - 1) * gridLength) + col;
+    }
+
+    // Check if row and column values are in range of grid size
+    private void validateBounds(int row, int col)
+    {
+        if (row > gridLength || row < 1) {
+            throw new IndexOutOfBoundsException("Row index is out of bounds");
+        }
+
+        if (col > gridLength || col < 1) {
+            throw new IndexOutOfBoundsException("Column index is out of bounds");
+        }
+    }
+
+    // Test client (optional)
+    public static void main(String[] args)
+    {
+        Percolation percolation = new Percolation(2);
+
+        StdOut.println("percolates = " + percolation.percolates());
+
+        StdOut.println("isOpen(1, 2) = " + percolation.isOpen(1, 2));
+        StdOut.println("isFull(1, 2) = " + percolation.isFull(1, 2));
+        StdOut.println("open(1, 2)");
+        percolation.open(1, 2);
+        StdOut.println("isOpen(1, 2) = " + percolation.isOpen(1, 2));
+        StdOut.println("isFull(1, 2) = " + percolation.isFull(1, 2));
+        StdOut.println("numberOfOpenSites() = " + percolation.numberOfOpenSites());
+        StdOut.println("percolates() = " + percolation.percolates());
+
+        StdOut.println("isOpen(2, 1) = " + percolation.isOpen(2, 1));
+        StdOut.println("isFull(2, 1) = " + percolation.isFull(2, 1));
+        StdOut.println("open(2, 1)");
+        percolation.open(2, 1);
+        StdOut.println("isOpen(2, 1) = " + percolation.isOpen(2, 1));
+        StdOut.println("isFull(2, 1) = " + percolation.isFull(2, 1));
+        StdOut.println("numberOfOpenSites() = " + percolation.numberOfOpenSites());
+        StdOut.println("percolates() = " + percolation.percolates());
+
+        StdOut.println("isOpen(1, 1) = " + percolation.isOpen(1, 1));
+        StdOut.println("isFull(1, 1) = " + percolation.isFull(1, 1));
+        StdOut.println("open(1, 1)");
+        percolation.open(1, 1);
+        StdOut.println("isOpen(1, 1) = " + percolation.isOpen(1, 1));
+        StdOut.println("isFull(1, 1) = " + percolation.isFull(1, 1));
+        StdOut.println("numberOfOpenSites() = " + percolation.numberOfOpenSites());
+        StdOut.println("percolates() = " + percolation.percolates());
+    }
 }
