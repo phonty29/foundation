@@ -12,44 +12,58 @@ struct LinkedList {
 struct LinkedList *build_LinkedList(int *values, int length) {
     struct LinkedList *head = NULL;
     for (int i = length-1; i >= 0; i--) {
-        struct LinkedList *node; 
+        struct LinkedList *node;    
 
         node = malloc(sizeof(*node));
+        if (node == NULL) {
+            printf("Error: memory allocation failed\n");
+            exit(1);
+        }
         node->value=*(values+i);
         node->next = head;
 
         head = node;
     }
+
+    return head;
 }
 
 
-void print_LinkedList(struct LinkedList *ll) {
-    if (ll == NULL) {
-        printf("Head is empty\n");
+void print_LinkedList(struct LinkedList *head) {
+    if (head == NULL) {
+        printf("Error: head is empty\n");
+        exit(1);
     }
 
-    char hasNext = 1;
     int counter = 1; 
-    while (hasNext) {
-        printf("Linked List #%d: { ", counter);
-        printf("value %d, ", ll->value);
-        if (ll->next == NULL) {
-            printf(", 'TAIL' }\n");
-            hasNext = 0;
-        } else {
-            printf(", next = %p }\n", ll->next);
-            ll = ll->next; 
-            counter+=1;
-        }
+    while (head != NULL) {
+        if (head->next != NULL)
+            printf("Linked List #%d: { value = %d, next = %p }\n", counter, head->value, head->next);
+        else 
+            printf("Linked List #%d: { value = %d, 'TAIL' }\n", counter, head->value);
+        head = head->next;          
+        counter++;
     }
 }
 
 
-int main(int argc, char *argv) {
+void free_LinkedList(struct LinkedList *head) {
+    struct LinkedList *temp_node;
+    printf("\n");
+    while (head != NULL) {
+        temp_node = head;
+        head = head->next;
+        free(temp_node);
+    }
+}
+
+
+int main(int argc, char *argv[]) {
     int values[] = {1, 2, 3, 4, 5};
     int length = sizeof(values)/sizeof(*values);
 
-    struct LinkedList *ll = build_LinkedList(values, length);
-    print_LinkedList(ll);
+    struct LinkedList *head = build_LinkedList(values, length);
+    print_LinkedList(head);
+    free_LinkedList(head);
     return 0;
 }
