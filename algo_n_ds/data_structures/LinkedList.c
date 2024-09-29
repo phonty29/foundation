@@ -49,7 +49,6 @@ void print_LinkedList(struct LinkedList *head) {
 
 void free_LinkedList(struct LinkedList *head) {
     struct LinkedList *temp_node;
-    printf("\n");
     while (head != NULL) {
         temp_node = head;
         head = head->next;
