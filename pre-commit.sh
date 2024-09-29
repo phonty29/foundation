@@ -28,7 +28,7 @@ if [ -n "$executable_files" ]; then
   done
 
   if [ "$has_bin" = true ]; then
-    echo -e "\n\033[0;31m The following executable files were found:\033[0m"
+    echo "\n\033[0;31m The following executable files were found.\033[0m"
     exit 1
   fi
 fi
