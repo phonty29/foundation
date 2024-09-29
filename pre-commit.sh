@@ -12,20 +12,20 @@ cat << 'EOF' > "$FILE"
 #!/bin/sh
 
 executable_files=$(find . -type f -executable ! -path "./.git/*")
+has_bin = false
 
 if [ -n "$executable_files" ]; then
 
-  has_exe = false
   for file in $executable_files; do
-    if [["$file" == *.sh]]; then
+    if [[ "$file" == *.sh ]]; then
       continue
     fi
     
     echo "- $file"
-    has_exe = true
+    has_bin = true
   done
 
-  if [ "$has_exe" = true]; then
+  if [ "$has_bin" = true]; then
     echo "\n\033[0;31m The following executable files were found:\033[0m"
     exit 1
   fi
