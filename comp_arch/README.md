@@ -1,1 +1,0 @@
-Computer Architecture—sometimes called “computer systems” or “computer organization”—is an important first look at computing below the surface of software. From my experience, it’s the most neglected area among self-taught software engineers.
