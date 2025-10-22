@@ -1,4 +1,4 @@
-package p_lang.async;
+package p_lang.java_concepts.async;
 
 public class MultiThreadedEventLoop {
     public static void main(String[] args) {

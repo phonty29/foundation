@@ -1,4 +1,4 @@
-package p_lang.custom_annotation;
+package p_lang.java_concepts.custom_annotation;
 
 @JsonSerializable
 public class Person {
