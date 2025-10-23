@@ -12,8 +12,6 @@ void handle_message(Request *req) {
 
 int main() {
   Server *s = create_server(41234);
-
   on(s, EVENT_TYPE_MESSAGE, handle_message);
-
   start_server(s);
 }
