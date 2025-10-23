@@ -3,14 +3,14 @@
 
 
 // integer value implementation
-struct LinkedList {
+typedef struct LinkedList {
     int value;
     struct LinkedList *next;
-};
+} LinkedList;
 
 
-struct LinkedList *build_LinkedList(int *values, int length) {
-    struct LinkedList *head = NULL;
+LinkedList *build_LinkedList(int *values, int length) {
+    LinkedList *head = NULL;
     for (int i = length-1; i >= 0; i--) {
         struct LinkedList *node;    
 
@@ -29,7 +29,7 @@ struct LinkedList *build_LinkedList(int *values, int length) {
 }
 
 
-void print_LinkedList(struct LinkedList *head) {
+void print_LinkedList(LinkedList *head) {
     if (head == NULL) {
         printf("Error: head is empty\n");
         exit(1);
@@ -47,8 +47,8 @@ void print_LinkedList(struct LinkedList *head) {
 }
 
 
-void free_LinkedList(struct LinkedList *head) {
-    struct LinkedList *temp_node;
+void free_LinkedList(LinkedList *head) {
+    LinkedList *temp_node;
     while (head != NULL) {
         temp_node = head;
         head = head->next;
@@ -61,7 +61,7 @@ int main(int argc, char *argv[]) {
     int values[] = {1, 2, 3, 4, 5};
     int length = sizeof(values)/sizeof(*values);
 
-    struct LinkedList *head = build_LinkedList(values, length);
+    LinkedList *head = build_LinkedList(values, length);
     print_LinkedList(head);
     free_LinkedList(head);
     return 0;

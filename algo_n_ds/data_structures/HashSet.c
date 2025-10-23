@@ -2,15 +2,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-struct HashSet {
+typedef struct HashSet {
     int *values;
     int size;
     int _alloc_size;
-};
+} HashSet;
 
 
-static struct HashSet new_HashSet() {
-    struct HashSet hs;
+static HashSet new_HashSet() {
+    HashSet hs;
     hs._alloc_size = 10;
     hs.values = (int*) malloc(hs._alloc_size * sizeof(int));
     if (hs.values == NULL) {
@@ -21,7 +21,7 @@ static struct HashSet new_HashSet() {
 }
 
 
-static void HashSet_add(struct HashSet *hs, int in_val) {
+static void HashSet_add(HashSet *hs, int in_val) {
     for (int i = 0; i < hs->size; i++) {
         if (hs->values[i] == in_val)
             return;
@@ -37,7 +37,7 @@ static void HashSet_add(struct HashSet *hs, int in_val) {
 }
 
 
-static void HashSet_print(struct HashSet *hs) {
+static void HashSet_print(HashSet *hs) {
     if (hs == NULL) {
         printf("Error: provided HashSet is null\n");
         exit(1);
@@ -51,14 +51,14 @@ static void HashSet_print(struct HashSet *hs) {
     }
 }
 
-static void HashSet_free(struct HashSet *hs) {
+static void HashSet_free(HashSet *hs) {
     free(hs->values);
     hs->values = NULL;
 }
 
 
 int main() {
-    struct HashSet hs = new_HashSet();
+    HashSet hs = new_HashSet();
     
     HashSet_add(&hs, 0);
     HashSet_add(&hs, 1);

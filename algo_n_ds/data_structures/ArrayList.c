@@ -3,14 +3,14 @@
 
 
 // Implementation for integer values
-struct ArrayList {
+typedef struct ArrayList {
     int *values;
     int size;
     int _alloc_size;
-};
+} ArrayList;
 
 
-static void add(int in_val, struct ArrayList *arr_l) {
+static void add(int in_val, ArrayList *arr_l) {
     if (arr_l->size == arr_l->_alloc_size) {
         arr_l->_alloc_size *= 2;
         arr_l->values = realloc(arr_l->values, arr_l->_alloc_size*sizeof(int));
@@ -24,7 +24,7 @@ static void add(int in_val, struct ArrayList *arr_l) {
 }
 
 
-static void print_ArrayList(struct ArrayList *arr_l) {
+static void print_ArrayList(ArrayList *arr_l) {
     int size = arr_l->size;
     printf("ArrayList: [ ");
     for (int i = 0; i < size; i++) {
@@ -37,7 +37,7 @@ static void print_ArrayList(struct ArrayList *arr_l) {
 }
 
 
-static struct ArrayList build_ArrayList() {
+static ArrayList build_ArrayList() {
     struct ArrayList arr_l = { NULL, 0, 10 };
     arr_l.values = (int*) malloc(arr_l._alloc_size * sizeof(int));
     if (arr_l.values == NULL) 
@@ -46,14 +46,14 @@ static struct ArrayList build_ArrayList() {
 }
 
 
-static void free_ArrayList(struct ArrayList *arr_l) {
+static void free_ArrayList(ArrayList *arr_l) {
     free(arr_l->values);
     arr_l->values = NULL;
 }
 
 
 int main(int argc, char *argv[]) {
-    struct ArrayList arr_l = build_ArrayList();
+    ArrayList arr_l = build_ArrayList();
 
     add(1, &arr_l); 
     add(2, &arr_l); 
