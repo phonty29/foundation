@@ -1,4 +1,3 @@
 io/phonty/annotation/Getter.class
-io/phonty/sample/Person.class
 META-INF/services/javax.annotation.processing.Processor
 io/phonty/processor/GetterProcessor.class

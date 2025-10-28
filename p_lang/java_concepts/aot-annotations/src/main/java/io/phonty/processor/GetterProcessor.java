@@ -1,7 +1,6 @@
 package io.phonty.processor;
 
 import com.google.auto.service.AutoService;
-import com.sun.source.util.Trees;
 import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;

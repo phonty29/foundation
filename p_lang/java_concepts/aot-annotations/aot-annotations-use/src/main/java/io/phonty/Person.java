@@ -1,8 +1,8 @@
-package io.phonty.sample;
+package io.phonty;
 
 import io.phonty.annotation.Getter;
 
 @Getter
 public class Person {
-    private String name;
+   private String name; 
 }
