@@ -1,4 +1,4 @@
-package p_lang.java_concepts.sql_parser;
+package p_lang.java_concepts.sql_processor.lexer;
 
 public final class Token {
     public final TokenType type;

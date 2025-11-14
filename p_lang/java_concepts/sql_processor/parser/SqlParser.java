@@ -1,6 +1,20 @@
-package p_lang.java_concepts.sql_parser;
+package p_lang.java_concepts.sql_processor.parser;
 
 import java.util.*;
+
+import p_lang.java_concepts.sql_processor.lexer.Token;
+import p_lang.java_concepts.sql_processor.lexer.TokenType;
+import p_lang.java_concepts.sql_processor.parser.ast.BinaryOp;
+import p_lang.java_concepts.sql_processor.parser.ast.Expression;
+import p_lang.java_concepts.sql_processor.parser.ast.FromItem;
+import p_lang.java_concepts.sql_processor.parser.ast.FunctionCall;
+import p_lang.java_concepts.sql_processor.parser.ast.Identifier;
+import p_lang.java_concepts.sql_processor.parser.ast.Literal;
+import p_lang.java_concepts.sql_processor.parser.ast.SelectItem;
+import p_lang.java_concepts.sql_processor.parser.ast.SelectStmt;
+import p_lang.java_concepts.sql_processor.parser.ast.SubqueryRef;
+import p_lang.java_concepts.sql_processor.parser.ast.TableRef;
+import p_lang.java_concepts.sql_processor.parser.ast.UnaryOp;
 
 public class SqlParser {
     private final List<Token> tokens;
