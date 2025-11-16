@@ -21,6 +21,12 @@ public class SqlLexer {
     KEYWORDS.put("NOT", TokenType.KEYWORD_NOT);
     KEYWORDS.put("IS", TokenType.KEYWORD_IS);
     KEYWORDS.put("NULL", TokenType.KEYWORD_NULL);
+    KEYWORDS.put("ORDER", TokenType.KEYWORD_ORDER);
+    KEYWORDS.put("LIMIT", TokenType.KEYWORD_LIMIT);
+    KEYWORDS.put("OFFSET", TokenType.KEYWORD_OFFSET);
+    KEYWORDS.put("BY", TokenType.KEYWORD_BY);
+    KEYWORDS.put("ASC", TokenType.KEYWORD_ASC);
+    KEYWORDS.put("DESC", TokenType.KEYWORD_DESC);
   }
 
   public SqlLexer(String s) {

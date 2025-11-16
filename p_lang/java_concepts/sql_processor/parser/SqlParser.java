@@ -10,6 +10,7 @@ import p_lang.java_concepts.sql_processor.parser.ast.FromItem;
 import p_lang.java_concepts.sql_processor.parser.ast.FunctionCall;
 import p_lang.java_concepts.sql_processor.parser.ast.Identifier;
 import p_lang.java_concepts.sql_processor.parser.ast.Literal;
+import p_lang.java_concepts.sql_processor.parser.ast.OrderItem;
 import p_lang.java_concepts.sql_processor.parser.ast.SelectItem;
 import p_lang.java_concepts.sql_processor.parser.ast.SelectStmt;
 import p_lang.java_concepts.sql_processor.parser.ast.SubqueryRef;
@@ -54,8 +55,23 @@ public class SqlParser {
         if (match(TokenType.KEYWORD_WHERE)) {
             where = parseExpression(0);
         } 
+        List<OrderItem> order = null;
+        if (match(TokenType.KEYWORD_ORDER)) {
+            consume(TokenType.KEYWORD_BY, "expected BY after ORDER");
+            order = parseOrderBy();
+        }
+        Integer limit = null;
+        Integer offset = null;
+        if (match(TokenType.KEYWORD_LIMIT)) {
+            Token num = consume(TokenType.NUMBER, "expected limit number");
+            limit = Integer.parseInt(num.text);
+        }
+        if (match(TokenType.KEYWORD_OFFSET)) {
+            Token num = consume(TokenType.NUMBER, "expected offset number");
+            offset = Integer.parseInt(num.text);
+        }
         if (match(TokenType.SEMICOLON)) { /* ok */ }
-        return new SelectStmt(select, from, where);
+        return new SelectStmt(select, from, where, order, limit, offset);
     }
 
     private List<SelectItem> parseSelectList(){
@@ -184,5 +200,18 @@ public class SqlParser {
             return new Identifier("*");
         }
         throw new RuntimeException("Unexpected token in expression at " + cur.pos + ": " + cur);
+    }
+
+
+    private List<OrderItem> parseOrderBy(){
+        List<OrderItem> out = new ArrayList<>();
+        do {
+            Expression e = parseExpression(0);
+            boolean asc = true;
+            if (match(TokenType.KEYWORD_ASC)) asc = true;
+            else if (match(TokenType.KEYWORD_DESC)) asc = false;
+            out.add(new OrderItem(e, asc));
+        } while (match(TokenType.COMMA));
+        return out;
     }
 }

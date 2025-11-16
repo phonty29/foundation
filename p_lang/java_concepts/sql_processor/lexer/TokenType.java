@@ -29,5 +29,11 @@ public enum TokenType {
     KEYWORD_NOT,
     KEYWORD_IS,
     KEYWORD_NULL,
+    KEYWORD_ORDER,
+    KEYWORD_BY,
+    KEYWORD_LIMIT,
+    KEYWORD_OFFSET,
+    KEYWORD_ASC,
+    KEYWORD_DESC,
     EOF
 }

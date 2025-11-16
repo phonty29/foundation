@@ -12,7 +12,7 @@ import p_lang.java_concepts.sql_processor.parser.ast.SelectStmt;
 
 public class Main {
     public static void main(String... args) {
-        String sql = "SELECT id, name AS n FROM users WHERE age > 10 AND name = 'Chanco'";
+        String sql = "select * from users where age > 10 and name = 'Chanco';";
         SqlLexer lex = new SqlLexer(sql);
         List<Token> toks = lex.tokenize();
         SqlParser p = new SqlParser(toks);
@@ -27,7 +27,7 @@ public class Main {
         // ]
         BinaryOp where = (BinaryOp) s.where();
         System.out.println("WHERE (");
-        if (where.op().contentEquals("AND")) {
+        if (where.op().contentEquals("and")) {
             BinaryOp leftBinaryOp = (BinaryOp) where.left();
             BinaryOp rightBinaryOp = (BinaryOp) where.right();
             if (leftBinaryOp.op().contentEquals(">")) {
