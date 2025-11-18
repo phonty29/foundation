@@ -1,7 +1,5 @@
 package p_lang.java_concepts.sql_processor.lexer;
 
-import javax.crypto.KEM;
-
 public enum TokenType {
     IDENT,
     NUMBER,
