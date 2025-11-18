@@ -1,5 +1,7 @@
 package p_lang.java_concepts.sql_processor.lexer;
 
+import javax.crypto.KEM;
+
 public enum TokenType {
     IDENT,
     NUMBER,
@@ -35,5 +37,15 @@ public enum TokenType {
     KEYWORD_OFFSET,
     KEYWORD_ASC,
     KEYWORD_DESC,
+    KEYWORD_CREATE,
+    KEYWORD_TABLE,
+    KEYWORD_PRIMARY,
+    KEYWORD_KEY,
+    KEYWORD_DEFAULT,
+    KEYWORD_UNIQUE,
+    KEYWORD_AUTOINCREMENT,
+    TYPE_INTEGER,
+    TYPE_TEXT,
+    TYPE_REAL,
     EOF
 }

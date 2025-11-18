@@ -27,6 +27,15 @@ public class SqlLexer {
     KEYWORDS.put("BY", TokenType.KEYWORD_BY);
     KEYWORDS.put("ASC", TokenType.KEYWORD_ASC);
     KEYWORDS.put("DESC", TokenType.KEYWORD_DESC);
+    KEYWORDS.put("CREATE", TokenType.KEYWORD_CREATE);
+    KEYWORDS.put("TABLE", TokenType.KEYWORD_TABLE);
+    KEYWORDS.put("PRIMARY", TokenType.KEYWORD_PRIMARY);
+    KEYWORDS.put("KEY", TokenType.KEYWORD_KEY);
+    KEYWORDS.put("AUTOINCREMENT", TokenType.KEYWORD_AUTOINCREMENT);
+    KEYWORDS.put("DEFAULT", TokenType.KEYWORD_DEFAULT);
+    KEYWORDS.put("UNIQUE", TokenType.KEYWORD_UNIQUE);
+    KEYWORDS.put("INTEGER", TokenType.TYPE_INTEGER);
+    KEYWORDS.put("TEXT", TokenType.TYPE_TEXT);
   }
 
   public SqlLexer(String s) {
