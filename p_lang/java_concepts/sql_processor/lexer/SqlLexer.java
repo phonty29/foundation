@@ -36,6 +36,7 @@ public class SqlLexer {
     KEYWORDS.put("UNIQUE", TokenType.KEYWORD_UNIQUE);
     KEYWORDS.put("INTEGER", TokenType.TYPE_INTEGER);
     KEYWORDS.put("TEXT", TokenType.TYPE_TEXT);
+    KEYWORDS.put("REAL", TokenType.TYPE_REAL);
   }
 
   public SqlLexer(String s) {
