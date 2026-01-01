@@ -1,6 +1,5 @@
 package p_lang.java_concepts.sql_processor.parser.ast;
 
-import java.util.Comparator;
 import java.util.Objects;
 
 import p_lang.java_concepts.sql_processor.Row;
